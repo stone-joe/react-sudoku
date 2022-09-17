@@ -1,42 +1,42 @@
 import React from 'react';
 import { KeyboardEvent } from 'react';
+import { Cell } from '../model/Cell.js';
 import { Point } from '../model/Point';
 
-export interface SubGridProps {
-  points: Point[][];
-  onChange: (detail: Point) => void;
+export interface ChangeDetail {
+  cell: Cell;
+  value: number;
 }
 
-export function SubGrid({ points, onChange }: SubGridProps) {
-  function handleKeyStroke(e: KeyboardEvent<HTMLInputElement>, row: number, column: number) {
+export interface SubGridProps {
+  cells: Cell[];
+  onChange(detail: ChangeDetail): void;
+}
+
+export function SubGrid({ cells, onChange }: SubGridProps) {
+  function handleKeyStroke(e: KeyboardEvent<HTMLInputElement>, cell: Cell) {
     e.preventDefault();
     e.stopPropagation();
     const number = parseInt((e.target as HTMLInputElement).value);
-    if (number > -1 && number < 10) {
-      (e.target as HTMLInputElement).value = number.toString();
-      onChange({
-        row,
-        col: column,
-        value: number,
-        valid: true
-      });
-    }
+    (e.target as HTMLInputElement).value = number.toString();
+    onChange({
+      cell,
+      value: number
+    });
   }
   return (
     <div className='sub-grid'>
-      {points.map((row, rIndex) => (
-        row.map((point, cIndex) => (
-          <input
-            key={`${rIndex}_${cIndex}`}
-            type="number"
-            onChange={() => {/* noop to make the compiler happy */}}
-            onKeyUp={(e) => handleKeyStroke(e, rIndex, cIndex)}
-            value={point.value}
-            min={0}
-            maxLength={1}
-            className={point.valid ? '' : 'invalid'}
-          />
-        ))
+      {cells.map((cell) => (
+        <input
+          key={`${cell.row}_${cell.col}`}
+          type="number"
+          onChange={() => {/* noop to make the compiler happy */ }}
+          onKeyUp={(e) => handleKeyStroke(e, cell)}
+          value={cell.value}
+          min={0}
+          maxLength={1}
+          className={cell.valid ? '' : 'invalid'}
+        />
       ))}
     </div>
   );

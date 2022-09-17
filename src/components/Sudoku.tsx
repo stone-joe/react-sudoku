@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+import '../App.css';
 import { MiniGrid } from '../model/MiniGrid';
 import { Point } from '../model/Point';
 import { SubGrid } from './SubGrid';
@@ -22,8 +22,8 @@ export default class Sudoku extends Component<SudokuProps, SudokuState> {
     )
   } as SudokuState;
 
-  #handleChange({ grid, row, col, value }: Point & { grid: MiniGrid }) {
-    if (grid.add(row, col, value)) {
+  #handleChange({ grid, cell, value }: { grid: MiniGrid; cell: <Cell></Cell>; value: number }) {
+    if (grid.update(row, col, value)) {
       // validate the row and column
       const grids = this.state.grids.reduce((acc, grids) => acc.concat(grids), []);
       const isValid = grids.some(otherGrid => otherGrid !== grid && (
@@ -43,9 +43,9 @@ export default class Sudoku extends Component<SudokuProps, SudokuState> {
   render() {
     return (
       <div className='board'>
-        {this.state.grids.map(row => (
-          row.map(grid => (
-            <SubGrid points={grid.toPoints()} onChange={(data) => this.#handleChange({ grid, ...data })} />
+        {this.state.grids.map((row, rIndex) => (
+          row.map((grid, cIndex) => (
+            <SubGrid key={`${rIndex}_${cIndex}_grid`} cells={grid.toPoints()} onChange={(data) => this.#handleChange({ grid, ...data })} />
           ))
         ))}
       </div>
