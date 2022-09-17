@@ -1,6 +1,8 @@
-import { cleanup, fireEvent, getByText, render } from '@testing-library/react';
-import { MiniGrid } from '../MiniGrid';
-import { ChangeDetails, SubGrid } from '../SubGrid';
+import React from 'react';
+import { cleanup, fireEvent, render } from '@testing-library/react';
+import { MiniGrid } from '../../model/MiniGrid';
+import { SubGrid } from '../SubGrid';
+import { Point } from '../../model/Point';
 
 describe('sub-grid', () => {
   afterEach(() => {
@@ -15,7 +17,7 @@ describe('sub-grid', () => {
       4, 0, 1
     ]);
     // test
-    const { getByDisplayValue, getAllByDisplayValue } = render(<SubGrid grid={grid} invalid={[]} onChange={jest.fn()} />);
+    const { getByDisplayValue, getAllByDisplayValue } = render(<SubGrid points={grid.toPoints()} onChange={jest.fn()} />);
     // verify
     expect(getByDisplayValue('5')).not.toHaveClass('invalid');
     expect(getByDisplayValue('7')).not.toHaveClass('invalid');
@@ -36,8 +38,10 @@ describe('sub-grid', () => {
       0, 5, 9,
       4, 0, 1
     ]);
+    grid.setValidation(1, 1, false);
+    grid.setValidation(2, 0, false);
     // test
-    const { getByDisplayValue, getAllByDisplayValue } = render(<SubGrid grid={grid} invalid={[{ row: 1, col: 1 }, { row: 2, col: 0 }]} onChange={jest.fn()} />);
+    const { getByDisplayValue, getAllByDisplayValue } = render(<SubGrid points={grid.toPoints()} onChange={jest.fn()} />);
     // verify
     expect(getAllByDisplayValue('5')[0]).not.toHaveClass('invalid');
     expect(getAllByDisplayValue('5')[1]).toHaveClass('invalid');
@@ -50,7 +54,7 @@ describe('sub-grid', () => {
       0, 0, 9,
       4, 0, 1
     ]);
-    const { getByDisplayValue } = render(<SubGrid grid={grid} invalid={[]} onChange={jest.fn()} />);
+    const { getByDisplayValue } = render(<SubGrid points={grid.toPoints()} onChange={jest.fn()} />);
     // test
     const input = getByDisplayValue('5');
     fireEvent.keyUp(input, {
@@ -69,7 +73,7 @@ describe('sub-grid', () => {
       4, 0, 1
     ]);
     const handler = jest.fn();
-    const { getAllByDisplayValue } = render(<SubGrid grid={grid} invalid={[]} onChange={handler} />);
+    const { getAllByDisplayValue } = render(<SubGrid points={grid.toPoints()} onChange={handler} />);
     // test
     fireEvent.keyUp(getAllByDisplayValue('0')[1], {
       target: {
@@ -80,7 +84,8 @@ describe('sub-grid', () => {
     expect(handler).toHaveBeenCalledWith({
       row: 1,
       col: 1,
-      value: 6
-    } as ChangeDetails);
+      value: 6,
+      valid: true
+    } as Point);
   });
 });

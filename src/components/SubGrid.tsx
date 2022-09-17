@@ -1,18 +1,13 @@
+import React from 'react';
 import { KeyboardEvent } from 'react';
-import { MiniGrid } from './MiniGrid'
-import { Point } from './Point';
-
-export interface ChangeDetails extends Point {
-  value: number;
-}
+import { Point } from '../model/Point';
 
 export interface SubGridProps {
-  grid: MiniGrid;
-  invalid: Point[],
-  onChange: (detail: ChangeDetails) => void;
+  points: Point[][];
+  onChange: (detail: Point) => void;
 }
 
-export function SubGrid({ grid, invalid, onChange }: SubGridProps) {
+export function SubGrid({ points, onChange }: SubGridProps) {
   function handleKeyStroke(e: KeyboardEvent<HTMLInputElement>, row: number, column: number) {
     e.preventDefault();
     e.stopPropagation();
@@ -22,23 +17,24 @@ export function SubGrid({ grid, invalid, onChange }: SubGridProps) {
       onChange({
         row,
         col: column,
-        value: number
+        value: number,
+        valid: true
       });
     }
   }
   return (
     <div className='sub-grid'>
-      {grid.grid.map((row, rIndex) => (
-        row.map((col, cIndex) => (
+      {points.map((row, rIndex) => (
+        row.map((point, cIndex) => (
           <input
             key={`${rIndex}_${cIndex}`}
             type="number"
             onChange={() => {/* noop to make the compiler happy */}}
             onKeyUp={(e) => handleKeyStroke(e, rIndex, cIndex)}
-            value={col}
+            value={point.value}
             min={0}
             maxLength={1}
-            className={invalid.some(p => p.row === rIndex && p.col === cIndex) ? 'invalid' : ''}
+            className={point.valid ? '' : 'invalid'}
           />
         ))
       ))}
