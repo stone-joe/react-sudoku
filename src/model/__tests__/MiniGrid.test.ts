@@ -47,6 +47,6 @@ describe('MiniGrid', () => {
       7, 8, 9
     ]);
     // test and verify
-    expect(grid.update(1, 1, 2)).toBe(false);
+    expect(grid.update(grid.at(1, 1), 2)).toBe(false);
   });
 });

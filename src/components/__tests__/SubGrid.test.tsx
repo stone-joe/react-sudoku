@@ -7,7 +7,18 @@ describe('sub-grid', () => {
   afterEach(() => {
     cleanup();
   });
-
+  it('should render 9 inputs', async () => {
+    // setup
+    const grid = new MiniGrid([
+      0, 0, 0,
+      0, 0, 0,
+      0, 0, 0
+    ]);
+    // test
+    const { getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={jest.fn()} />);
+    // verify
+    expect(getAllByDisplayValue('0')).toHaveLength(9);
+  });
   it('should render the information provided in the mini grid', async () => {
     // setup
     const grid = new MiniGrid([

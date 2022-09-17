@@ -1,11 +1,61 @@
 import React from 'react';
-import { fireEvent, render, RenderResult } from '@testing-library/react';
-import Sudoku from '../Sudoku';
+import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react';
+import Sudoku, { setValidators } from '../Sudoku';
+import { MiniGrid } from '../../model/MiniGrid';
 
 describe('sudoku', () => {
   let screen: RenderResult;
   beforeEach(() => {
     screen = render(<Sudoku />);
+  });
+  afterEach(() => {
+    cleanup();
+  });
+  describe('set validators', () => {
+    it('should set the correct validators', () => {
+      // setup
+      const size = 3;
+      const grids = new Array(size * size).fill(0).map(() => new MiniGrid([
+        0, 0, 0,
+        0, 0, 0,
+        0, 0, 0
+      ]));
+      // test
+      setValidators(grids, size);
+      // validate
+      expect(grids[0].cells[0].validators).toEqual(expect.arrayContaining([
+        // row
+        grids[1].cells[0],
+        grids[1].cells[1],
+        grids[1].cells[2],
+        grids[2].cells[0],
+        grids[2].cells[1],
+        grids[2].cells[2],
+        // column
+        grids[3].cells[0],
+        grids[3].cells[3],
+        grids[3].cells[6],
+        grids[6].cells[0],
+        grids[6].cells[3],
+        grids[6].cells[6],
+      ]));
+      expect(grids[4].cells[2].validators).toEqual(expect.arrayContaining([
+        // row
+        grids[3].cells[0],
+        grids[3].cells[1],
+        grids[3].cells[2],
+        grids[5].cells[0],
+        grids[5].cells[1],
+        grids[5].cells[2],
+        // column
+        grids[1].cells[2],
+        grids[1].cells[5],
+        grids[1].cells[8],
+        grids[7].cells[2],
+        grids[7].cells[5],
+        grids[7].cells[8],
+      ]));
+    });
   });
   it('should render a 9x9 board with inputs set to 0', () => {
     // test
@@ -28,13 +78,85 @@ describe('sudoku', () => {
     // same row
     const input1 = inputs[10];
     const input2 = inputs[0];
-    fireEvent.keyUp(input1, '8');
-    fireEvent.keyUp(input2, '8');
+    fireEvent.keyUp(input1, {
+      target: {
+        value: '8'
+      }
+    });
+    fireEvent.keyUp(input2, {
+      target: {
+        value: '8'
+      }
+    });
     // verify
     expect(input1).toHaveClass('invalid');
     expect(input2).toHaveClass('invalid');
     // test changing back
-    fireEvent.keyUp(input1, '6');
+    fireEvent.keyUp(input1, {
+      target: {
+        value: '6'
+      }
+    });
+    // verify
+    expect(input1).not.toHaveClass('invalid');
+    expect(input2).not.toHaveClass('invalid');
+  });
+  it('should highlight the same input in the same subgrid as invalid', () => {
+    // test
+    const { getAllByDisplayValue } = screen;
+    const inputs = getAllByDisplayValue('0');
+    // same column
+    const input1 = inputs[0]; // grid 1, row 1, cell 1
+    const input2 = inputs[7]; // grid 1, row 3, cell 2
+    fireEvent.keyUp(input1, {
+      target: {
+        value: '8'
+      }
+    });
+    fireEvent.keyUp(input2, {
+      target: {
+        value: '8'
+      }
+    });
+    // verify
+    expect(input1).toHaveClass('invalid');
+    expect(input2).toHaveClass('invalid');
+    // test changing back
+    fireEvent.keyUp(input1, {
+      target: {
+        value: '6'
+      }
+    });
+    // verify
+    expect(input1).not.toHaveClass('invalid');
+    expect(input2).not.toHaveClass('invalid');
+  });
+  it('should highlight the same input in the same column as invalid', () => {
+    // test
+    const { getAllByDisplayValue } = screen;
+    const inputs = getAllByDisplayValue('0');
+    // same column
+    const input1 = inputs[16]; // grid 2, row 3, cell 3
+    const input2 = inputs[40]; // grid 1, row 3, cell 2
+    fireEvent.keyUp(input1, {
+      target: {
+        value: '8'
+      }
+    });
+    fireEvent.keyUp(input2, {
+      target: {
+        value: '8'
+      }
+    });
+    // verify
+    expect(input1).toHaveClass('invalid');
+    expect(input2).toHaveClass('invalid');
+    // test changing back
+    fireEvent.keyUp(input1, {
+      target: {
+        value: '6'
+      }
+    });
     // verify
     expect(input1).not.toHaveClass('invalid');
     expect(input2).not.toHaveClass('invalid');

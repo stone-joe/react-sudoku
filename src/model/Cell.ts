@@ -20,6 +20,10 @@ export class Cell implements Point {
     this.#validators.clear();
   }
 
+  get validators() {
+    return Array.from(this.#validators)
+  }
+
   get valid(): boolean {
     for (const cell of this.#validators) {
       if (cell.value && this.value && cell.value === this.value) {

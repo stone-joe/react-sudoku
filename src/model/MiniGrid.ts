@@ -59,8 +59,7 @@ export class MiniGrid {
     }
   }
 
-  update(row: number, col: number, n: number): boolean {
-    const cell = this.at(row, col);
+  update(cell: Cell, n: number): boolean {
     cell.value = n;
     return cell.valid;
   }
