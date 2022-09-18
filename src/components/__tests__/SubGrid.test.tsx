@@ -63,17 +63,15 @@ describe('sub-grid', () => {
       4, 0, 1
     ]);
     const handler = jest.fn();
-    const { getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={handler} />);
+    const { getByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={handler} />);
     // test
-    fireEvent.input(getAllByDisplayValue('')[1], {
-      target: {
-        value: '6'
-      }
+    fireEvent.keyUp(getByDisplayValue('8'), {
+      key: '4'
     });
     // verify
     expect(handler).toHaveBeenCalledWith({
-      cell: grid.cells[4],
-      value: 6
+      cell: grid.cells[2],
+      value: 4
     });
   });
   it('should only keep the last digit', () => {
@@ -84,17 +82,15 @@ describe('sub-grid', () => {
       4, 0, 1
     ]);
     const handler = jest.fn();
-    const { getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={handler} />);
+    const { getByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={handler} />);
     // test
-    fireEvent.input(getAllByDisplayValue('')[1], {
-      target: {
-        value: '6789'
-      }
+    fireEvent.keyUp(getByDisplayValue('9'), {
+      key: '5'
     });
     // verify
     expect(handler).toHaveBeenCalledWith({
-      cell: grid.cells[4],
-      value: 9
+      cell: grid.cells[5],
+      value: 5
     });
   });
 });

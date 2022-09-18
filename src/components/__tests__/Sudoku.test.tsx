@@ -40,17 +40,19 @@ describe('sudoku', () => {
         grids[6].cells[6],
       ]));
       expect(grids[4].cells[2].validators).toEqual(expect.arrayContaining([
-        // row
+        // row - left
         grids[3].cells[0],
         grids[3].cells[1],
         grids[3].cells[2],
+        // row - right
         grids[5].cells[0],
         grids[5].cells[1],
         grids[5].cells[2],
-        // column
+        // column - up
         grids[1].cells[2],
         grids[1].cells[5],
         grids[1].cells[8],
+        // column - down
         grids[7].cells[2],
         grids[7].cells[5],
         grids[7].cells[8],
@@ -67,7 +69,7 @@ describe('sudoku', () => {
     // test
     const { getAllByDisplayValue } = screen;
     const input = getAllByDisplayValue('')[6] as HTMLInputElement;
-    fireEvent.input(input, { target: { value: '7' } });
+    fireEvent.keyUp(input, { target: { value: '7' } });
     // verify
     expect(input.value).toEqual('7');
   });
@@ -76,26 +78,20 @@ describe('sudoku', () => {
     const { getAllByDisplayValue } = screen;
     const inputs = getAllByDisplayValue('');
     // same row
-    const input1 = inputs[10];
+    const input1 = inputs[18];
     const input2 = inputs[0];
-    fireEvent.input(input1, {
-      target: {
-        value: '8'
-      }
+    fireEvent.keyUp(input1, {
+      key: '8'
     });
-    fireEvent.input(input2, {
-      target: {
-        value: '8'
-      }
+    fireEvent.keyUp(input2, {
+      key: '8'
     });
     // verify
     expect(input1).toHaveClass('invalid');
     expect(input2).toHaveClass('invalid');
     // test changing back
-    fireEvent.input(input1, {
-      target: {
-        value: '6'
-      }
+    fireEvent.keyUp(input1, {
+      key: '6'
     });
     // verify
     expect(input1).not.toHaveClass('invalid');
@@ -108,24 +104,18 @@ describe('sudoku', () => {
     // same column
     const input1 = inputs[0]; // grid 1, row 1, cell 1
     const input2 = inputs[7]; // grid 1, row 3, cell 2
-    fireEvent.input(input1, {
-      target: {
-        value: '8'
-      }
+    fireEvent.keyUp(input1, {
+      key: '8'
     });
-    fireEvent.input(input2, {
-      target: {
-        value: '8'
-      }
+    fireEvent.keyUp(input2, {
+      key: '8'
     });
     // verify
     expect(input1).toHaveClass('invalid');
     expect(input2).toHaveClass('invalid');
     // test changing back
-    fireEvent.input(input1, {
-      target: {
-        value: '6'
-      }
+    fireEvent.keyUp(input1, {
+      key: '6'
     });
     // verify
     expect(input1).not.toHaveClass('invalid');
@@ -136,26 +126,20 @@ describe('sudoku', () => {
     const { getAllByDisplayValue } = screen;
     const inputs = getAllByDisplayValue('');
     // same column
-    const input1 = inputs[16]; // grid 2, row 3, cell 3
-    const input2 = inputs[64]; // grid 1, row 3, cell 2
-    fireEvent.input(input1, {
-      target: {
-        value: '8'
-      }
+    const input1 = inputs[10]; // grid 2, row 1, cell 2
+    const input2 = inputs[64]; // grid 8, row 1, cell 2
+    fireEvent.keyUp(input1, {
+      key: '8'
     });
-    fireEvent.input(input2, {
-      target: {
-        value: '8'
-      }
+    fireEvent.keyUp(input2, {
+      key: '8'
     });
     // verify
     expect(input1).toHaveClass('invalid');
     expect(input2).toHaveClass('invalid');
     // test changing back
-    fireEvent.input(input1, {
-      target: {
-        value: '6'
-      }
+    fireEvent.keyUp(input1, {
+      key: '6'
     });
     // verify
     expect(input1).not.toHaveClass('invalid');

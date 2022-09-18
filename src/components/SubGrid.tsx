@@ -1,4 +1,4 @@
-import React, { FormEvent, KeyboardEvent } from 'react';
+import React, { KeyboardEvent } from 'react';
 import { Cell } from '../model/Cell.js';
 
 export interface ChangeDetail {
@@ -14,16 +14,13 @@ export interface SubGridProps {
 }
 
 export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
-  function handleKeyStroke(e: FormEvent<HTMLInputElement>, cell: Cell) {
+  function handleKeyStroke(e: KeyboardEvent<HTMLInputElement>, cell: Cell) {
     e.preventDefault();
-    e.stopPropagation();
-    const value = (e.target as HTMLInputElement).value;
-    const num = parseInt(value[value.length - 1]);
-    console.log(value, num);
-    if (num) {
+    const value = parseInt(e.key);
+    if (value) {
       onChange({
         cell,
-        value: num 
+        value 
       });
     }
   }
@@ -32,12 +29,13 @@ export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
       {cells.map((cell) => (
         <input
           key={`${cell.row}_${cell.col}`}
-          data-row={cell.row + 3 * ((row as number) - 1)}
-          data-col={cell.col + 3 * ((col as number) - 1)}
+          data-row={(cell.row + 3 * ((row as number) - 1))?.toString()}
+          data-col={(cell.col + 3 * ((col as number) - 1))?.toString()}
           type="text"
-          onChange={() => {/* noop to make the compiler happy */ }}
-          onInput={(e) => {
-            console.log('stroke');
+          onChange={() => { /* noop to make the compiler happy */ }}
+          onKeyUp={(e) => {
+            // for some reason, onInput isn't firing after the first "input" event.
+            // to get around this, "keyup" is being used
             handleKeyStroke(e, cell);
           }}
           value={cell.value || ''}
