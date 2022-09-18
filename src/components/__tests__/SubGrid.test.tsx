@@ -10,9 +10,9 @@ describe('sub-grid', () => {
   it('should render 9 inputs', async () => {
     // setup
     const grid = new MiniGrid([
-      0, 0, 0,
-      0, 0, 0,
-      0, 0, 0
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0]
     ]);
     // test
     const { getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={jest.fn()} />);
@@ -22,9 +22,9 @@ describe('sub-grid', () => {
   it('should render the information provided in the mini grid', async () => {
     // setup
     const grid = new MiniGrid([
-      5, 7, 8,
-      0, 0, 9,
-      4, 0, 1
+      [5, 7, 8],
+      [0, 0, 9],
+      [4, 0, 1]
     ]);
     // test
     const { getByDisplayValue, getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={jest.fn()} />);
@@ -44,9 +44,9 @@ describe('sub-grid', () => {
   it('should highlight invalid cells', async () => {
     // setup
     const grid = new MiniGrid([
-      5, 7, 8,
-      0, 5, 9,
-      4, 0, 1
+      [5, 7, 8],
+      [0, 5, 9],
+      [4, 0, 1]
     ]);
     // test
     const { getByDisplayValue, getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={jest.fn()} />);
@@ -58,9 +58,9 @@ describe('sub-grid', () => {
   it('should emit when a change occurs', () => {
     // setup
     const grid = new MiniGrid([
-      5, 7, 8,
-      0, 0, 9,
-      4, 0, 1
+      [5, 7, 8],
+      [0, 0, 9],
+      [4, 0, 1]
     ]);
     const handler = jest.fn();
     const { getByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={handler} />);
@@ -77,9 +77,9 @@ describe('sub-grid', () => {
   it('should only keep the last digit', () => {
     // setup
     const grid = new MiniGrid([
-      5, 7, 8,
-      0, 0, 9,
-      4, 0, 1
+      [5, 7, 8],
+      [0, 0, 9],
+      [4, 0, 1]
     ]);
     const handler = jest.fn();
     const { getByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={handler} />);

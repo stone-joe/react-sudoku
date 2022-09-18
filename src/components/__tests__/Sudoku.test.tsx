@@ -26,55 +26,7 @@ describe('sudoku', () => {
     cleanup();
     jest.restoreAllMocks();
   });
-  describe('set validators', () => {
-    it('should set the correct validators', () => {
-      // setup
-      const size = 3;
-      const grids = new Array(size * size).fill(0).map(() => new MiniGrid([
-        0, 0, 0,
-        0, 0, 0,
-        0, 0, 0
-      ]));
-      // test
-      setValidators(grids, size);
-      // validate
-      expect(grids[0].cells[0].validators).toEqual(expect.arrayContaining([
-        // row
-        grids[1].cells[0],
-        grids[1].cells[1],
-        grids[1].cells[2],
-        grids[2].cells[0],
-        grids[2].cells[1],
-        grids[2].cells[2],
-        // column
-        grids[3].cells[0],
-        grids[3].cells[3],
-        grids[3].cells[6],
-        grids[6].cells[0],
-        grids[6].cells[3],
-        grids[6].cells[6],
-      ]));
-      expect(grids[4].cells[2].validators).toEqual(expect.arrayContaining([
-        // row - left
-        grids[3].cells[0],
-        grids[3].cells[1],
-        grids[3].cells[2],
-        // row - right
-        grids[5].cells[0],
-        grids[5].cells[1],
-        grids[5].cells[2],
-        // column - up
-        grids[1].cells[2],
-        grids[1].cells[5],
-        grids[1].cells[8],
-        // column - down
-        grids[7].cells[2],
-        grids[7].cells[5],
-        grids[7].cells[8],
-      ]));
-    });
-  });
-  it('should render a 9x9 board with inputs set to 0', () => {
+  it('should render a 9x9 board with inputs set to 0', async () => {
     // test
     const { getAllByDisplayValue } = screen;
     // verify

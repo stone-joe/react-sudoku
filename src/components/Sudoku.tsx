@@ -15,11 +15,11 @@ export default function Sudoku(props: SudokuProps) {
   const [level, setLevel] = useState<string>();
   const [size, setSize] = useState(3);
   const [grids, setGrids] = useState(
-    new Array(size * size).fill(0).map(() => new MiniGrid([
-      0, 0, 0,
-      0, 0, 0,
-      0, 0, 0
-    ]))
+    new Array(size).fill(0).map(() => new Array(size).fill(0).map(() => new MiniGrid([
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0]
+    ])))
   );
 
   function handleFocus(e: FocusEvent) {
@@ -54,16 +54,15 @@ export default function Sudoku(props: SudokuProps) {
   useEffect(() => {
     if (level) {
       const game = sudoku.generate(level).split('');
-      grids.forEach((grid, i) => {
-        const row = Math.floor(i / size);
-        const col = i - size * Math.floor(i / size);
-        grid.cells.forEach(cell => {
-          const char = game[(cell.col + 3 * col) + ((cell.row + 3 * row) * 9)] as string;
-          cell.value = char === '.' ? 0 : parseInt(char);
+      grids.forEach((row, rIndex) => {
+        row.forEach((grid, cIndex) => {
+          grid.cells.forEach(cell => {
+            const char = game[(cell.col + 3 * cIndex) + ((cell.row + 3 * rIndex) * 9)] as string;
+            cell.value = char === '.' ? 0 : parseInt(char);
+          });
         });
       });
       setGrids([...grids]);
-      console.log(grids);
     }
   }, [level]);
 
@@ -75,14 +74,16 @@ export default function Sudoku(props: SudokuProps) {
   return (
     <div className='board'>
       <StartWindow levels={["easy", 'medium', 'hard']} onSelect={setLevel} show={!level} />
-      {grids.map((grid, i) => (
-        <SubGrid
-          key={`${i}_grid`}
-          row={Math.floor(i / size) + 1}
-          col={(i - size * Math.floor(i / size)) + 1}
-          cells={grid.toJSON().cells}
-          onChange={(data) => handleChange({ grid, ...data })}
-        />
+      {grids.map((row, rIndex) => (
+        row.map((grid, cIndex) => (
+          <SubGrid
+            key={`${rIndex}_${cIndex}_grid`}
+            row={rIndex+1}
+            col={cIndex+1}
+            cells={grid.toJSON().cells}
+            onChange={(data) => handleChange({ grid, ...data })}
+          />
+        ))
       ))}
     </div>
   );
