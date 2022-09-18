@@ -1,7 +1,21 @@
 import React from 'react';
 import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react';
-import Sudoku, { setValidators } from '../Sudoku';
+import Sudoku from '../Sudoku';
 import { MiniGrid } from '../../model/MiniGrid';
+import { setValidators } from '../../helpers/setValidators';
+
+jest.mock('../../model/sudoku.js', () => ({
+  __esModule: true,
+  default: {
+    generate(level: 'easy' | 'medium' | 'hard'): string {
+      return {
+        easy: '97.8546232583164.96349725..86372195459746....14259....425137896.196.5.4..86249..5',
+        medium: '3..7415..7125..4.9.46..81....8457.6.2.5619.4346..8279....895.141542.6.78893.74652',
+        hard: '4579...36..9.6...7..175...8..2.9..7..7........1..7.6..123.4.76959862731474613982.'
+      }[level];
+    }
+  }
+}));
 
 describe('sudoku', () => {
   let screen: RenderResult;
@@ -10,6 +24,7 @@ describe('sudoku', () => {
   });
   afterEach(() => {
     cleanup();
+    jest.restoreAllMocks();
   });
   describe('set validators', () => {
     it('should set the correct validators', () => {
@@ -144,5 +159,37 @@ describe('sudoku', () => {
     // verify
     expect(input1).not.toHaveClass('invalid');
     expect(input2).not.toHaveClass('invalid');
+  });
+  it('should generate a medium level sudoku board', () => {
+    // test
+    const { getAllByText, getAllByRole } = render(<Sudoku />);
+    fireEvent.click(getAllByText('Medium')[0]);
+    // verify
+    expect(getAllByRole('alert', { hidden: true })[0]).toHaveStyle('display: none');
+    expect(document.querySelector('input[data-row="0"][data-col="0"]')).toHaveValue('3');
+    expect(document.querySelector('input[data-row="0"][data-col="1"]')).toHaveValue('');
+    expect(document.querySelector('input[data-row="0"][data-col="2"]')).toHaveValue('');
+    expect(document.querySelector('input[data-row="0"][data-col="3"]')).toHaveValue('7');
+    expect(document.querySelector('input[data-row="0"][data-col="4"]')).toHaveValue('4');
+    expect(document.querySelector('input[data-row="0"][data-col="5"]')).toHaveValue('1');
+    expect(document.querySelector('input[data-row="0"][data-col="6"]')).toHaveValue('5');
+    expect(document.querySelector('input[data-row="0"][data-col="7"]')).toHaveValue('');
+    expect(document.querySelector('input[data-row="0"][data-col="8"]')).toHaveValue('');
+    expect(document.querySelector('input[data-row="1"][data-col="0"]')).toHaveValue('7');
+    expect(document.querySelector('input[data-row="1"][data-col="1"]')).toHaveValue('1');
+    expect(document.querySelector('input[data-row="1"][data-col="2"]')).toHaveValue('2');
+    expect(document.querySelector('input[data-row="1"][data-col="3"]')).toHaveValue('5');
+    expect(document.querySelector('input[data-row="1"][data-col="4"]')).toHaveValue('');
+    expect(document.querySelector('input[data-row="1"][data-col="5"]')).toHaveValue('');
+    expect(document.querySelector('input[data-row="1"][data-col="6"]')).toHaveValue('4');
+    expect(document.querySelector('input[data-row="1"][data-col="7"]')).toHaveValue('');
+    expect(document.querySelector('input[data-row="1"][data-col="8"]')).toHaveValue('9');
+  });
+  it('should generate a sudoku board with none of the inputs marked as invalid', () => {
+    // test
+    const { getAllByText } = render(<Sudoku />);
+    fireEvent.click(getAllByText('Easy')[0]);
+    // verify
+    expect(document.querySelectorAll('input.invalid')).toHaveLength(0);
   });
 });

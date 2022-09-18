@@ -1,20 +1,20 @@
 import React, { KeyboardEvent } from 'react';
-import { Cell } from '../model/Cell.js';
+import { Cell, CellI } from '../model/Cell.js';
 
 export interface ChangeDetail {
-  cell: Cell;
+  cell: CellI;
   value: number;
 }
 
 export interface SubGridProps {
-  cells: Cell[];
+  cells: CellI[];
   onChange(detail: ChangeDetail): void;
   row?: number;
   col?: number;
 }
 
 export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
-  function handleKeyStroke(e: KeyboardEvent<HTMLInputElement>, cell: Cell) {
+  function handleKeyStroke(e: KeyboardEvent<HTMLInputElement>, cell: CellI) {
     e.preventDefault();
     const value = parseInt(e.key);
     if (value) {

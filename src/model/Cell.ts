@@ -1,6 +1,10 @@
 import { Point } from './Point';
 
-export class Cell implements Point {
+export interface CellI extends Point {
+  valid: boolean;
+}
+
+export class Cell implements CellI {
   row: number = 0;
   col: number = 0;
   value: number = 0;
@@ -31,5 +35,14 @@ export class Cell implements Point {
       }
     }
     return true;
+  }
+
+  toJSON(): CellI {
+    return {
+      row: this.row,
+      col: this.col,
+      value: this.value,
+      valid: this.valid
+    };
   }
 }

@@ -1,53 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import '../App.css';
-import { Cell } from '../model/Cell';
+import { Cell, CellI } from '../model/Cell';
 import { Cursor } from '../model/Cursor';
 import { MiniGrid } from '../model/MiniGrid';
 import { SubGrid } from './SubGrid';
 import sudoku from '../model/sudoku';
 import { StartWindow } from './StartWindow';
+import { setValidators } from '../helpers/setValidators';
 
 export interface SudokuProps { }
-
-export function setValidators(grids: MiniGrid[], miniGridSideLength: number) {
-  grids.forEach((grid, gridIndex) => {
-    // add each cell in the same row as a validator
-    for (const otherGrid of grids.slice(Math.floor(gridIndex / miniGridSideLength), Math.floor(gridIndex / miniGridSideLength) + miniGridSideLength)) {
-      if (otherGrid !== grid) {
-        for (let i = 0; i < miniGridSideLength; i++) {
-          grid.row(i).forEach(cell => {
-            cell.setValidators(otherGrid.row(i));
-          });
-        }
-      }
-    }
-
-    // add the columns as validators
-    const columnGrids = [];
-    // check ahead
-    for (let i = gridIndex + miniGridSideLength, n = grids.length; i <= n; i += miniGridSideLength) {
-      if (grids[i]) {
-        columnGrids.push(grids[i]);
-      }
-    }
-    // check behind
-    for (let i = gridIndex - miniGridSideLength; i >= 0; i -= miniGridSideLength) {
-      if (grids[i]) {
-        columnGrids.push(grids[i]);
-      }
-    }
-
-    for (const otherGrid of columnGrids) {
-      if (otherGrid !== grid) {
-        for (let i = 0; i < miniGridSideLength; i++) {
-          grid.column(i).forEach(cell => {
-            cell.setValidators(otherGrid.column(i));
-          });
-        }
-      }
-    }
-  });
-}
 
 export default function Sudoku(props: SudokuProps) {
   const cursor = new Cursor();
@@ -61,24 +22,33 @@ export default function Sudoku(props: SudokuProps) {
     ]))
   );
 
+  function handleFocus(e: FocusEvent) {
+    const target = (e.target) as HTMLInputElement;
+    cursor.col = parseInt(target.dataset.col as string);
+    cursor.row = parseInt(target.dataset.row as string);
+  }
+
+  async function handleKeyUp(e: KeyboardEvent) {
+    try {
+      // keyup is firing more than once ... using a debounce
+      // to avoid double updates
+      await cursor.debounce();
+    } catch (e) {
+      // ignore - a rejected promise means that a timer is already in progress
+      return;
+    }
+    cursor.process(e.key);
+    (document.querySelector(`input[data-row="${cursor.row}"][data-col="${cursor.col}"]`) as HTMLInputElement)?.focus();
+  }
+
   useEffect(() => {
     setValidators(grids, size);
-    document.addEventListener('focusin', (e) => {
-      const target = (e.target) as HTMLInputElement;
-      cursor.col = parseInt(target.dataset.col as string);
-      cursor.row = parseInt(target.dataset.row as string);
-    });
-    document.addEventListener('keyup', async (e) => {
-      try {
-        // keyup is firing more than once ... using a debounce
-        // to avoid double updates
-        await cursor.debounce();
-        cursor.process(e.key);
-        (document.querySelector(`input[data-row="${cursor.row}"][data-col="${cursor.col}"]`) as HTMLInputElement)?.focus();
-      } catch (e) {
-        // ignore
-      }
-    });
+    document.addEventListener('focusin', handleFocus);
+    document.addEventListener('keyup', handleKeyUp);
+    return () => {
+      document.removeEventListener('focusin', handleFocus);
+      document.removeEventListener('keyup', handleKeyUp);
+    };
   }, []);
 
   useEffect(() => {
@@ -88,15 +58,16 @@ export default function Sudoku(props: SudokuProps) {
         const row = Math.floor(i / size);
         const col = i - size * Math.floor(i / size);
         grid.cells.forEach(cell => {
-          const char = game[(cell.col + 3 * col) + ((cell.row + 3 * row) * 9)];
-          cell.value = char === '.' ? '' : char;
+          const char = game[(cell.col + 3 * col) + ((cell.row + 3 * row) * 9)] as string;
+          cell.value = char === '.' ? 0 : parseInt(char);
         });
       });
       setGrids([...grids]);
+      console.log(grids);
     }
   }, [level]);
 
-  function handleChange({ grid, cell, value }: { grid: MiniGrid; cell: Cell; value: number }) {
+  function handleChange({ grid, cell, value }: { grid: MiniGrid; cell: CellI; value: number }) {
     grid.update(cell, value);
     setGrids([...grids]);
   }
@@ -109,7 +80,7 @@ export default function Sudoku(props: SudokuProps) {
           key={`${i}_grid`}
           row={Math.floor(i / size) + 1}
           col={(i - size * Math.floor(i / size)) + 1}
-          cells={[...grid.cells]}
+          cells={grid.toJSON().cells}
           onChange={(data) => handleChange({ grid, ...data })}
         />
       ))}

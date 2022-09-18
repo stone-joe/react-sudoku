@@ -1,4 +1,4 @@
-import { Cell } from './Cell';
+import { Cell, CellI } from './Cell';
 
 export class MiniGrid {
   #grid: Cell[] = [];
@@ -59,8 +59,16 @@ export class MiniGrid {
     }
   }
 
-  update(cell: Cell, n: number): boolean {
-    cell.value = n;
-    return cell.valid;
+  update(cell: CellI, n: number): boolean {
+    const c = this.at(cell.row, cell.col);
+    c.value = n;
+    return c.valid;
+  }
+
+  toJSON(): { cells: CellI[], valid: boolean } {
+    return {
+      cells: this.cells.map(c => c.toJSON()),
+      valid: this.valid()
+    };
   }
 }
