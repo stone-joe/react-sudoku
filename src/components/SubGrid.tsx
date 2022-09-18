@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React, { FormEvent, KeyboardEvent } from 'react';
 import { Cell } from '../model/Cell.js';
 
 export interface ChangeDetail {
@@ -19,6 +19,7 @@ export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
     e.stopPropagation();
     const value = (e.target as HTMLInputElement).value;
     const num = parseInt(value[value.length - 1]);
+    console.log(value, num);
     if (num) {
       onChange({
         cell,
@@ -31,9 +32,14 @@ export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
       {cells.map((cell) => (
         <input
           key={`${cell.row}_${cell.col}`}
+          data-row={cell.row + 3 * ((row as number) - 1)}
+          data-col={cell.col + 3 * ((col as number) - 1)}
           type="text"
           onChange={() => {/* noop to make the compiler happy */ }}
-          onInput={(e) => handleKeyStroke(e, cell)}
+          onInput={(e) => {
+            console.log('stroke');
+            handleKeyStroke(e, cell);
+          }}
           value={cell.value || ''}
           maxLength={1}
           className={cell.valid ? '' : 'invalid'}

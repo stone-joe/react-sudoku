@@ -1,6 +1,7 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../App.css';
 import { Cell } from '../model/Cell';
+import { Cursor } from '../model/Cursor';
 import { MiniGrid } from '../model/MiniGrid';
 import { SubGrid } from './SubGrid';
 
@@ -43,6 +44,7 @@ export function setValidators(grids: MiniGrid[], miniGridSideLength: number) {
 }
 
 export default function Sudoku(props: SudokuProps) {
+  const cursor = new Cursor();
   const [size, setSize] = useState(3);
   const [grids, setGrids] = useState(
     new Array(size * size).fill(0).map(() => new MiniGrid([
@@ -54,6 +56,22 @@ export default function Sudoku(props: SudokuProps) {
 
   useEffect(() => {
     setValidators(grids, size);
+    document.addEventListener('focusin', (e) => {
+      const target = (e.target) as HTMLInputElement;
+      cursor.col = parseInt(target.dataset.col as string);
+      cursor.row = parseInt(target.dataset.row as string);
+    });
+    document.addEventListener('keyup', async (e) => {
+      try {
+        // keyup is firing more than once ... using a debounce
+        // to avoid double updates
+        await cursor.debounce();
+        cursor.process(e.key);
+        (document.querySelector(`input[data-row="${cursor.row}"][data-col="${cursor.col}"]`) as HTMLInputElement)?.focus();
+      } catch (e) {
+        // ignore
+      }
+    });
   }, []);
 
   function handleChange({ grid, cell, value }: { grid: MiniGrid; cell: Cell; value: number }) {
