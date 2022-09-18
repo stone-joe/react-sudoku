@@ -16,11 +16,12 @@ export interface SubGridProps {
 export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
   function handleKeyStroke(e: KeyboardEvent<HTMLInputElement>, cell: CellI) {
     e.preventDefault();
-    const value = parseInt(e.key);
-    if (value) {
+    const isBackspace = ['Backspace', 'Delete', 'Space'].includes(e.key);
+    const value = isBackspace ? 0 : parseInt(e.key);
+    if (value || isBackspace) {
       onChange({
         cell,
-        value 
+        value
       });
     }
   }

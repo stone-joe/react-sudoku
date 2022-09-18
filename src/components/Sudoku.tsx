@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import 'bootstrap/dist/css/bootstrap-reboot.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css';
-import { Cell, CellI } from '../model/Cell';
+import { CellI } from '../model/Cell';
 import { Cursor } from '../model/Cursor';
 import { MiniGrid } from '../model/MiniGrid';
 import { SubGrid } from './SubGrid';
@@ -13,9 +15,10 @@ export interface SudokuProps { }
 export default function Sudoku(props: SudokuProps) {
   const cursor = new Cursor();
   const [level, setLevel] = useState<string>();
+  const [finished, setFinished] = useState<boolean>(false);
   const [size, setSize] = useState(3);
   const [grids, setGrids] = useState(
-    new Array(size).fill(0).map(() => new Array(size).fill(0).map(() => new MiniGrid([
+    new Array(size).fill(0).map(() => new Array(size).fill(0).map(() => MiniGrid.create([
       [0, 0, 0],
       [0, 0, 0],
       [0, 0, 0]
@@ -63,17 +66,31 @@ export default function Sudoku(props: SudokuProps) {
         });
       });
       setGrids([...grids]);
+      (document.querySelector('input[data-row][data-col]') as HTMLInputElement)?.focus();
     }
   }, [level]);
 
   function handleChange({ grid, cell, value }: { grid: MiniGrid; cell: CellI; value: number }) {
     grid.update(cell, value);
+    checkGameFinished();
     setGrids([...grids]);
+  }
+
+  function checkGameFinished() {
+    if (level && grids.reduce((acc, row) => acc.concat(row), []).every(grid => grid.valid())) {
+      setFinished(true);
+      setLevel('');
+    }
+  }
+
+  function levelSelected(level: string) {
+    setLevel(level);
+    setFinished(false);
   }
 
   return (
     <div className='board'>
-      <StartWindow levels={["easy", 'medium', 'hard']} onSelect={setLevel} show={!level} />
+      <StartWindow complete={finished} levels={["easy", 'medium', 'hard']} onSelect={levelSelected} show={!level} />
       {grids.map((row, rIndex) => (
         row.map((grid, cIndex) => (
           <SubGrid

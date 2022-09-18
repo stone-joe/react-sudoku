@@ -1,13 +1,17 @@
 import { Cell, CellI } from './Cell';
 
 export class MiniGrid {
+  static create(numbers: number[][], side = 3): MiniGrid {
+    return new MiniGrid(numbers, side);
+  }
+
   #grid: Cell[][] = [];
   // the number of cells in a column or row
   #side: number = 3;
 
   constructor(numbers: number[][], side = 3) {
     this.#grid = numbers.map((row, rIndex) => (
-      row.map((n, i) => new Cell({
+      row.map((n, i) => Cell.create({
         row: rIndex,
         col: i,
         value: n || 0
@@ -26,7 +30,7 @@ export class MiniGrid {
   }
 
   valid(): boolean {
-    return this.cells.every(cell => cell.valid);
+    return this.cells.every(cell => cell.value > 0 && cell.valid);
   }
 
   row(row = 0): Cell[] {

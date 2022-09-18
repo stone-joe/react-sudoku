@@ -28,9 +28,12 @@ describe('sudoku', () => {
   });
   it('should render a 9x9 board with inputs set to 0', async () => {
     // test
-    const { getAllByDisplayValue } = screen;
+    const { getAllByDisplayValue, getAllByText } = screen;
     // verify
     expect(getAllByDisplayValue('')).toHaveLength(81);
+    expect(getAllByText('Select a level', {
+      exact: false
+    })[0]).toBeVisible();
   });
   it('should update the value of the selected input', () => {
     // test
@@ -143,5 +146,28 @@ describe('sudoku', () => {
     fireEvent.click(getAllByText('Easy')[0]);
     // verify
     expect(document.querySelectorAll('input.invalid')).toHaveLength(0);
+  });
+  it('should check that the game is completed and display a winning animation', () => {
+    // setup
+    cleanup();
+    const fakeMiniGrid = MiniGrid.create([
+      [0, 0, 0],
+      [0, 0, 0],
+      [0, 0, 0]
+    ]);
+    // mock
+    jest.spyOn(MiniGrid, 'create').mockReturnValue(fakeMiniGrid);
+    jest.spyOn(fakeMiniGrid, 'valid').mockReturnValue(true);
+    // test
+    const { getAllByDisplayValue, getAllByText } = render(<Sudoku />);
+    fireEvent.click(getAllByText('Medium')[0]);
+    fireEvent.keyUp(getAllByDisplayValue('')[0], {
+      key: '9'
+    });
+    // verify
+    expect(getAllByText('Great job', {
+      exact: false
+    })[0]).toBeVisible();
+    expect(document.querySelector('.confetti-1')).toBeInTheDocument();
   });
 });

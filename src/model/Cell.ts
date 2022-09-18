@@ -5,6 +5,10 @@ export interface CellI extends Point {
 }
 
 export class Cell implements CellI {
+  static create(opts: Point & { validators?: Cell[] }): Cell {
+    return new Cell(opts);
+  }
+
   row: number = 0;
   col: number = 0;
   value: number = 0;

@@ -39,7 +39,7 @@ body, #root {
   grid-gap: var(--gap);
 }
 
-.sub-grid, .sub-grid > input {
+.sub-grid, input {
   --row: 0;
   --col: 0;
   grid-column: var(--col);
@@ -48,6 +48,11 @@ body, #root {
   appearance: textfield;
   text-align: center;
   font-weight: bold;
+  caret-color: transparent;
+}
+
+input:focus {
+  background-color: var(--bs-primary);
 }
 
 input.invalid {
