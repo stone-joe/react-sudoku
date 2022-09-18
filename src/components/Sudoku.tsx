@@ -4,6 +4,8 @@ import { Cell } from '../model/Cell';
 import { Cursor } from '../model/Cursor';
 import { MiniGrid } from '../model/MiniGrid';
 import { SubGrid } from './SubGrid';
+import sudoku from '../model/sudoku';
+import { StartWindow } from './StartWindow';
 
 export interface SudokuProps { }
 
@@ -49,6 +51,7 @@ export function setValidators(grids: MiniGrid[], miniGridSideLength: number) {
 
 export default function Sudoku(props: SudokuProps) {
   const cursor = new Cursor();
+  const [level, setLevel] = useState<string>();
   const [size, setSize] = useState(3);
   const [grids, setGrids] = useState(
     new Array(size * size).fill(0).map(() => new MiniGrid([
@@ -78,6 +81,21 @@ export default function Sudoku(props: SudokuProps) {
     });
   }, []);
 
+  useEffect(() => {
+    if (level) {
+      const game = sudoku.generate(level).split('');
+      grids.forEach((grid, i) => {
+        const row = Math.floor(i / size);
+        const col = i - size * Math.floor(i / size);
+        grid.cells.forEach(cell => {
+          const char = game[(cell.col + 3 * col) + ((cell.row + 3 * row) * 9)];
+          cell.value = char === '.' ? '' : char;
+        });
+      });
+      setGrids([...grids]);
+    }
+  }, [level]);
+
   function handleChange({ grid, cell, value }: { grid: MiniGrid; cell: Cell; value: number }) {
     grid.update(cell, value);
     setGrids([...grids]);
@@ -85,6 +103,7 @@ export default function Sudoku(props: SudokuProps) {
 
   return (
     <div className='board'>
+      <StartWindow levels={["easy", 'medium', 'hard']} onSelect={setLevel} show={!level} />
       {grids.map((grid, i) => (
         <SubGrid
           key={`${i}_grid`}
