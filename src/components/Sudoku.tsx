@@ -23,11 +23,11 @@ export function setValidators(grids: MiniGrid[], miniGridSideLength: number) {
     const columnGrids = [];
     // check ahead
     for (let i = gridIndex + miniGridSideLength, n = grids.length; i < n; i += miniGridSideLength) {
-      columnGrids.push(grids[gridIndex]);
+      columnGrids.push(grids[i]);
     }
     // check behind
     for (let i = gridIndex - miniGridSideLength; i > 0; i -= miniGridSideLength) {
-      columnGrids.push(grids[gridIndex]);
+      columnGrids.push(grids[i]);
     }
 
     for (const otherGrid of columnGrids) {
@@ -63,8 +63,14 @@ export default function Sudoku(props: SudokuProps) {
 
   return (
     <div className='board'>
-      {grids.map((grid, rIndex) => (
-        <SubGrid key={`${rIndex}_grid`} cells={[...grid.cells]} onChange={(data) => handleChange({ grid, ...data })} />
+      {grids.map((grid, i) => (
+        <SubGrid
+          key={`${i}_grid`}
+          row={Math.floor(i / size) + 1}
+          col={(i - size * Math.floor(i / size)) + 1}
+          cells={[...grid.cells]}
+          onChange={(data) => handleChange({ grid, ...data })}
+        />
       ))}
     </div>
   );

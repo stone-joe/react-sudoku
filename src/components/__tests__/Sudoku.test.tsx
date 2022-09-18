@@ -61,29 +61,29 @@ describe('sudoku', () => {
     // test
     const { getAllByDisplayValue } = screen;
     // verify
-    expect(getAllByDisplayValue('0')).toHaveLength(81);
+    expect(getAllByDisplayValue('')).toHaveLength(81);
   });
   it('should update the value of the selected input', () => {
     // test
     const { getAllByDisplayValue } = screen;
-    const input = getAllByDisplayValue('0')[6] as HTMLInputElement;
-    fireEvent.keyUp(input, { target: { value: '7' } });
+    const input = getAllByDisplayValue('')[6] as HTMLInputElement;
+    fireEvent.input(input, { target: { value: '7' } });
     // verify
     expect(input.value).toEqual('7');
   });
   it('should highlight the same number in the same row as invalid', () => {
     // test
     const { getAllByDisplayValue } = screen;
-    const inputs = getAllByDisplayValue('0');
+    const inputs = getAllByDisplayValue('');
     // same row
     const input1 = inputs[10];
     const input2 = inputs[0];
-    fireEvent.keyUp(input1, {
+    fireEvent.input(input1, {
       target: {
         value: '8'
       }
     });
-    fireEvent.keyUp(input2, {
+    fireEvent.input(input2, {
       target: {
         value: '8'
       }
@@ -92,7 +92,7 @@ describe('sudoku', () => {
     expect(input1).toHaveClass('invalid');
     expect(input2).toHaveClass('invalid');
     // test changing back
-    fireEvent.keyUp(input1, {
+    fireEvent.input(input1, {
       target: {
         value: '6'
       }
@@ -104,16 +104,16 @@ describe('sudoku', () => {
   it('should highlight the same input in the same subgrid as invalid', () => {
     // test
     const { getAllByDisplayValue } = screen;
-    const inputs = getAllByDisplayValue('0');
+    const inputs = getAllByDisplayValue('');
     // same column
     const input1 = inputs[0]; // grid 1, row 1, cell 1
     const input2 = inputs[7]; // grid 1, row 3, cell 2
-    fireEvent.keyUp(input1, {
+    fireEvent.input(input1, {
       target: {
         value: '8'
       }
     });
-    fireEvent.keyUp(input2, {
+    fireEvent.input(input2, {
       target: {
         value: '8'
       }
@@ -122,7 +122,7 @@ describe('sudoku', () => {
     expect(input1).toHaveClass('invalid');
     expect(input2).toHaveClass('invalid');
     // test changing back
-    fireEvent.keyUp(input1, {
+    fireEvent.input(input1, {
       target: {
         value: '6'
       }
@@ -134,16 +134,16 @@ describe('sudoku', () => {
   it('should highlight the same input in the same column as invalid', () => {
     // test
     const { getAllByDisplayValue } = screen;
-    const inputs = getAllByDisplayValue('0');
+    const inputs = getAllByDisplayValue('');
     // same column
     const input1 = inputs[16]; // grid 2, row 3, cell 3
-    const input2 = inputs[40]; // grid 1, row 3, cell 2
-    fireEvent.keyUp(input1, {
+    const input2 = inputs[64]; // grid 1, row 3, cell 2
+    fireEvent.input(input1, {
       target: {
         value: '8'
       }
     });
-    fireEvent.keyUp(input2, {
+    fireEvent.input(input2, {
       target: {
         value: '8'
       }
@@ -152,7 +152,7 @@ describe('sudoku', () => {
     expect(input1).toHaveClass('invalid');
     expect(input2).toHaveClass('invalid');
     // test changing back
-    fireEvent.keyUp(input1, {
+    fireEvent.input(input1, {
       target: {
         value: '6'
       }

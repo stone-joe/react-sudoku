@@ -17,7 +17,7 @@ describe('sub-grid', () => {
     // test
     const { getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={jest.fn()} />);
     // verify
-    expect(getAllByDisplayValue('0')).toHaveLength(9);
+    expect(getAllByDisplayValue('')).toHaveLength(9);
   });
   it('should render the information provided in the mini grid', async () => {
     // setup
@@ -35,7 +35,7 @@ describe('sub-grid', () => {
     expect(getByDisplayValue('9')).not.toHaveClass('invalid');
     expect(getByDisplayValue('4')).not.toHaveClass('invalid');
     expect(getByDisplayValue('1')).not.toHaveClass('invalid');
-    const empties = getAllByDisplayValue('0');
+    const empties = getAllByDisplayValue('');
     expect(empties).toHaveLength(3);
     empties.forEach(empty => {
       expect(empty).not.toHaveClass('invalid');
@@ -55,24 +55,6 @@ describe('sub-grid', () => {
     expect(getAllByDisplayValue('5')[1]).toHaveClass('invalid');
     expect(getByDisplayValue('4')).not.toHaveClass('invalid');
   });
-  it('should replace the current value with the selected value', () => {
-    // setup
-    const grid = new MiniGrid([
-      5, 7, 8,
-      0, 0, 9,
-      4, 0, 1
-    ]);
-    const { getByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={jest.fn()} />);
-    // test
-    const input = getByDisplayValue('5');
-    fireEvent.keyUp(input, {
-      target: {
-        value: '6'
-      }
-    });
-    // verify
-    expect(input).toHaveValue(6);
-  });
   it('should emit when a change occurs', () => {
     // setup
     const grid = new MiniGrid([
@@ -83,7 +65,7 @@ describe('sub-grid', () => {
     const handler = jest.fn();
     const { getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={handler} />);
     // test
-    fireEvent.keyUp(getAllByDisplayValue('0')[1], {
+    fireEvent.input(getAllByDisplayValue('')[1], {
       target: {
         value: '6'
       }
@@ -92,6 +74,27 @@ describe('sub-grid', () => {
     expect(handler).toHaveBeenCalledWith({
       cell: grid.cells[4],
       value: 6
+    });
+  });
+  it('should only keep the last digit', () => {
+    // setup
+    const grid = new MiniGrid([
+      5, 7, 8,
+      0, 0, 9,
+      4, 0, 1
+    ]);
+    const handler = jest.fn();
+    const { getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={handler} />);
+    // test
+    fireEvent.input(getAllByDisplayValue('')[1], {
+      target: {
+        value: '6789'
+      }
+    });
+    // verify
+    expect(handler).toHaveBeenCalledWith({
+      cell: grid.cells[4],
+      value: 9
     });
   });
 });

@@ -1,7 +1,5 @@
-import React from 'react';
-import { KeyboardEvent } from 'react';
+import React, { FormEvent } from 'react';
 import { Cell } from '../model/Cell.js';
-import { Point } from '../model/Point';
 
 export interface ChangeDetail {
   cell: Cell;
@@ -11,31 +9,35 @@ export interface ChangeDetail {
 export interface SubGridProps {
   cells: Cell[];
   onChange(detail: ChangeDetail): void;
+  row?: number;
+  col?: number;
 }
 
-export function SubGrid({ cells, onChange }: SubGridProps) {
-  function handleKeyStroke(e: KeyboardEvent<HTMLInputElement>, cell: Cell) {
+export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
+  function handleKeyStroke(e: FormEvent<HTMLInputElement>, cell: Cell) {
     e.preventDefault();
     e.stopPropagation();
-    const number = parseInt((e.target as HTMLInputElement).value);
-    (e.target as HTMLInputElement).value = number.toString();
-    onChange({
-      cell,
-      value: number
-    });
+    const value = (e.target as HTMLInputElement).value;
+    const num = parseInt(value[value.length - 1]);
+    if (num) {
+      onChange({
+        cell,
+        value: num 
+      });
+    }
   }
   return (
-    <div className='sub-grid'>
+    <div className='sub-grid' style={{'--row': row, '--col': col} as any}>
       {cells.map((cell) => (
         <input
           key={`${cell.row}_${cell.col}`}
-          type="number"
+          type="text"
           onChange={() => {/* noop to make the compiler happy */ }}
-          onKeyUp={(e) => handleKeyStroke(e, cell)}
-          value={cell.value}
-          min={0}
+          onInput={(e) => handleKeyStroke(e, cell)}
+          value={cell.value || ''}
           maxLength={1}
           className={cell.valid ? '' : 'invalid'}
+          style={{'--row': cell.row + 1, '--col': cell.col + 1} as any}
         />
       ))}
     </div>
