@@ -9,8 +9,8 @@ export function Controls({ show }: ControlsProps) {
     <div className="controls" hidden={!show}>
       <section>
         <p>
-          Select a box using the mouse or keyboard. Enter a number using the keypad. Invalid
-          numbers will be highlighted red.
+          Select a box using the mouse or keyboard. Enter a number using the
+          keypad. Invalid numbers will be highlighted red.
         </p>
         <table className="table">
           <tbody>

@@ -1,5 +1,5 @@
 import React, { KeyboardEvent } from 'react';
-import { Cell, CellI } from '../model/Cell.js';
+import { CellI } from '../model/Cell.js';
 
 export interface ChangeDetail {
   cell: CellI;
@@ -13,7 +13,7 @@ export interface SubGridProps {
   col?: number;
 }
 
-export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
+export function SubGrid({ cells, onChange, row, col }: SubGridProps) {
   function handleKeyStroke(e: KeyboardEvent<HTMLInputElement>, cell: CellI) {
     e.preventDefault();
     const isBackspace = ['Backspace', 'Delete', 'Space'].includes(e.key);
@@ -26,14 +26,16 @@ export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
     }
   }
   return (
-    <div className='sub-grid' style={{'--row': row, '--col': col} as any}>
+    <div className="sub-grid" style={{ '--row': row, '--col': col } as any}>
       {cells.map((cell) => (
         <input
           key={`${cell.row}_${cell.col}`}
           data-row={(cell.row + 3 * ((row as number) - 1))?.toString()}
           data-col={(cell.col + 3 * ((col as number) - 1))?.toString()}
           type="text"
-          onChange={() => { /* noop to make the compiler happy */ }}
+          onChange={() => {
+            /* noop to make the compiler happy */
+          }}
           onKeyUp={(e) => {
             // for some reason, onInput isn't firing after the first "input" event.
             // to get around this, "keyup" is being used
@@ -44,7 +46,7 @@ export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
           size={3}
           disabled={cell.disabled}
           className={cell.valid ? '' : 'invalid'}
-          style={{'--row': cell.row + 1, '--col': cell.col + 1} as any}
+          style={{ '--row': cell.row + 1, '--col': cell.col + 1 } as any}
         />
       ))}
     </div>

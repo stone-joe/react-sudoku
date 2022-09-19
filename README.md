@@ -5,8 +5,9 @@ A sudoku board and game built using React
 # Usage
 
 After cloning:
-1. use Docker to build an run: `docker-compose build` and `docker-compose up`; or
-2. use `npm start` to run the development server
+1. Run `npm run prepare`
+2. use Docker to build an run: `docker-compose build` and `docker-compose up`; or
+3. use `npm start` to run the development server
 
 # Code
 

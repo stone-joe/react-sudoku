@@ -14,7 +14,7 @@ export class Cursor {
   #disabled: Set<CellI> = new Set();
   debounce(): Promise<void> {
     if (!this.#timer) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         this.#timer = setTimeout(() => {
           this.#timer = null;
           resolve();

@@ -12,12 +12,33 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint": "eslint src",
+    "prepare": "husky install",
+    "prettier": "prettier --check src",
+    "prettier:write": "prettier --write src",
     "production": "http-server -p ${SERVER_PORT:-80} ."
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "tabWidth": 2,
+    "semi": true,
+    "singleQuote": true
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "testing-library/no-render-in-setup": "off",
+      "testing-library/prefer-screen-queries": "off",
+      "testing-library/no-node-access": "off"
+    },
+    "ignorePatterns": [
+      "src/model/sudoku.js"
     ]
   },
   "browserslist": {
@@ -42,6 +63,9 @@
     "@types/react": "18.0.20",
     "@types/react-dom": "18.0.6",
     "bootstrap": "5.2.1",
+    "eslint-plugin-prettier": "4.2.1",
+    "husky": "8.0.1",
+    "prettier": "2.7.1",
     "react": "18.2.0",
     "react-bootstrap": "2.5.0",
     "react-dom": "18.2.0",

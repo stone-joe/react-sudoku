@@ -31,7 +31,7 @@ export class Cell implements CellI {
   }
 
   get validators() {
-    return Array.from(this.#validators)
+    return Array.from(this.#validators);
   }
 
   get valid(): boolean {

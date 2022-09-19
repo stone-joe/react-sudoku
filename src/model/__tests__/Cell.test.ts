@@ -5,7 +5,12 @@ describe('Cell', () => {
     // setup
     const cell1 = new Cell({ row: 0, col: 0, value: 5, validators: [] });
     const cell2 = new Cell({ row: 0, col: 0, value: 1, validators: [] });
-    const cell3 = new Cell({ row: 0, col: 0, value: 1, validators: [cell1, cell2] });
+    const cell3 = new Cell({
+      row: 0,
+      col: 0,
+      value: 1,
+      validators: [cell1, cell2]
+    });
     // test & verify
     expect(cell3).toHaveProperty('valid', false);
     // test updating
@@ -16,7 +21,12 @@ describe('Cell', () => {
     // setup
     const cell1 = new Cell({ row: 0, col: 0, value: 1, validators: [] });
     const cell2 = new Cell({ row: 0, col: 0, value: 1, validators: [] });
-    const cell3 = new Cell({ row: 0, col: 0, value: 1, validators: [cell1, cell2] });
+    const cell3 = new Cell({
+      row: 0,
+      col: 0,
+      value: 1,
+      validators: [cell1, cell2]
+    });
     // test
     cell2.value = 3;
     // verify

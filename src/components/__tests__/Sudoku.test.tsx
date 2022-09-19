@@ -1,8 +1,12 @@
 import React from 'react';
-import { cleanup, fireEvent, render, RenderResult } from '@testing-library/react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  RenderResult
+} from '@testing-library/react';
 import Sudoku from '../Sudoku';
 import { MiniGrid } from '../../model/MiniGrid';
-import { setValidators } from '../../helpers/setValidators';
 
 jest.mock('../../model/sudoku.js', () => ({
   __esModule: true,
@@ -10,7 +14,8 @@ jest.mock('../../model/sudoku.js', () => ({
     generate(level: 'easy' | 'medium' | 'hard'): string {
       return {
         easy: '97.8546232583164.96349725..86372195459746....14259....425137896.196.5.4..86249..5',
-        medium: '3..7415..7125..4.9.46..81....8457.6.2.5619.4346..8279....895.141542.6.78893.74652',
+        medium:
+          '3..7415..7125..4.9.46..81....8457.6.2.5619.4346..8279....895.141542.6.78893.74652',
         hard: '4579...36..9.6...7..175...8..2.9..7..7........1..7.6..123.4.76959862731474613982.'
       }[level];
     }
@@ -31,9 +36,11 @@ describe('sudoku', () => {
     const { getAllByDisplayValue, getAllByText } = screen;
     // verify
     expect(getAllByDisplayValue('')).toHaveLength(81);
-    expect(getAllByText('Select a level', {
-      exact: false
-    })[0]).toBeVisible();
+    expect(
+      getAllByText('Select a level', {
+        exact: false
+      })[0]
+    ).toBeVisible();
   });
   it('should update the value of the selected input', () => {
     // test
@@ -120,25 +127,63 @@ describe('sudoku', () => {
     const { getAllByText, getAllByRole } = render(<Sudoku />);
     fireEvent.click(getAllByText('Medium')[0]);
     // verify
-    expect(getAllByRole('dialog', { hidden: true })[0]).toHaveStyle('display: none');
-    expect(document.querySelector('input[data-row="0"][data-col="0"]')).toHaveValue('3');
-    expect(document.querySelector('input[data-row="0"][data-col="1"]')).toHaveValue('');
-    expect(document.querySelector('input[data-row="0"][data-col="2"]')).toHaveValue('');
-    expect(document.querySelector('input[data-row="0"][data-col="3"]')).toHaveValue('7');
-    expect(document.querySelector('input[data-row="0"][data-col="4"]')).toHaveValue('4');
-    expect(document.querySelector('input[data-row="0"][data-col="5"]')).toHaveValue('1');
-    expect(document.querySelector('input[data-row="0"][data-col="6"]')).toHaveValue('5');
-    expect(document.querySelector('input[data-row="0"][data-col="7"]')).toHaveValue('');
-    expect(document.querySelector('input[data-row="0"][data-col="8"]')).toHaveValue('');
-    expect(document.querySelector('input[data-row="1"][data-col="0"]')).toHaveValue('7');
-    expect(document.querySelector('input[data-row="1"][data-col="1"]')).toHaveValue('1');
-    expect(document.querySelector('input[data-row="1"][data-col="2"]')).toHaveValue('2');
-    expect(document.querySelector('input[data-row="1"][data-col="3"]')).toHaveValue('5');
-    expect(document.querySelector('input[data-row="1"][data-col="4"]')).toHaveValue('');
-    expect(document.querySelector('input[data-row="1"][data-col="5"]')).toHaveValue('');
-    expect(document.querySelector('input[data-row="1"][data-col="6"]')).toHaveValue('4');
-    expect(document.querySelector('input[data-row="1"][data-col="7"]')).toHaveValue('');
-    expect(document.querySelector('input[data-row="1"][data-col="8"]')).toHaveValue('9');
+    expect(getAllByRole('dialog', { hidden: true })[0]).toHaveStyle(
+      'display: none'
+    );
+    expect(
+      document.querySelector('input[data-row="0"][data-col="0"]')
+    ).toHaveValue('3');
+    expect(
+      document.querySelector('input[data-row="0"][data-col="1"]')
+    ).toHaveValue('');
+    expect(
+      document.querySelector('input[data-row="0"][data-col="2"]')
+    ).toHaveValue('');
+    expect(
+      document.querySelector('input[data-row="0"][data-col="3"]')
+    ).toHaveValue('7');
+    expect(
+      document.querySelector('input[data-row="0"][data-col="4"]')
+    ).toHaveValue('4');
+    expect(
+      document.querySelector('input[data-row="0"][data-col="5"]')
+    ).toHaveValue('1');
+    expect(
+      document.querySelector('input[data-row="0"][data-col="6"]')
+    ).toHaveValue('5');
+    expect(
+      document.querySelector('input[data-row="0"][data-col="7"]')
+    ).toHaveValue('');
+    expect(
+      document.querySelector('input[data-row="0"][data-col="8"]')
+    ).toHaveValue('');
+    expect(
+      document.querySelector('input[data-row="1"][data-col="0"]')
+    ).toHaveValue('7');
+    expect(
+      document.querySelector('input[data-row="1"][data-col="1"]')
+    ).toHaveValue('1');
+    expect(
+      document.querySelector('input[data-row="1"][data-col="2"]')
+    ).toHaveValue('2');
+    expect(
+      document.querySelector('input[data-row="1"][data-col="3"]')
+    ).toHaveValue('5');
+    expect(
+      document.querySelector('input[data-row="1"][data-col="4"]')
+    ).toHaveValue('');
+    expect(
+      document.querySelector('input[data-row="1"][data-col="5"]')
+    ).toHaveValue('');
+    expect(
+      document.querySelector('input[data-row="1"][data-col="6"]')
+    ).toHaveValue('4');
+    expect(
+      document.querySelector('input[data-row="1"][data-col="7"]')
+    ).toHaveValue('');
+    expect(
+      document.querySelector('input[data-row="1"][data-col="8"]')
+    ).toHaveValue('9');
   });
   it('should generate a sudoku board with none of the inputs marked as invalid', () => {
     // test
@@ -165,13 +210,17 @@ describe('sudoku', () => {
       key: '9'
     });
     // verify
-    expect(getAllByText('Great job', {
-      exact: false
-    })[0]).toBeVisible();
+    expect(
+      getAllByText('Great job', {
+        exact: false
+      })[0]
+    ).toBeVisible();
     expect(document.querySelector('.confetti-1')).toBeInTheDocument();
     // test new game
     fireEvent.click(getAllByText('Hard')[0]);
     expect(document.querySelector('.confetti-1')).toBeNull();
-    expect(getAllByText('Select a level', { exact: false })[0]).not.toBeVisible();
+    expect(
+      getAllByText('Select a level', { exact: false })[0]
+    ).not.toBeVisible();
   });
 });

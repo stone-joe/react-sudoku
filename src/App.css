@@ -1,4 +1,5 @@
-body, #root {
+body,
+#root {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
@@ -30,7 +31,7 @@ body, #root {
   justify-content: center;
   align-items: center;
   background-color: var(--bs-white);
-  border: var(--border)
+  border: var(--border);
 }
 
 .start-window menu {
@@ -75,7 +76,8 @@ body, #root {
   text-align: justify;
 }
 
-.board, .sub-grid {
+.board,
+.sub-grid {
   width: calc(100% - var(--gap) * 2);
   height: 100%;
   display: grid;
@@ -87,7 +89,8 @@ body, #root {
   grid-gap: var(--gap);
 }
 
-.sub-grid, input {
+.sub-grid,
+input {
   --row: 0;
   --col: 0;
   grid-column: var(--col);

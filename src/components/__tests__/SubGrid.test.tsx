@@ -15,7 +15,9 @@ describe('sub-grid', () => {
       [0, 0, 0]
     ]);
     // test
-    const { getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={jest.fn()} />);
+    const { getAllByDisplayValue } = render(
+      <SubGrid cells={grid.cells} onChange={jest.fn()} />
+    );
     // verify
     expect(getAllByDisplayValue('')).toHaveLength(9);
   });
@@ -27,7 +29,9 @@ describe('sub-grid', () => {
       [4, 0, 1]
     ]);
     // test
-    const { getByDisplayValue, getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={jest.fn()} />);
+    const { getByDisplayValue, getAllByDisplayValue } = render(
+      <SubGrid cells={grid.cells} onChange={jest.fn()} />
+    );
     // verify
     expect(getByDisplayValue('5')).not.toHaveClass('invalid');
     expect(getByDisplayValue('7')).not.toHaveClass('invalid');
@@ -37,7 +41,7 @@ describe('sub-grid', () => {
     expect(getByDisplayValue('1')).not.toHaveClass('invalid');
     const empties = getAllByDisplayValue('');
     expect(empties).toHaveLength(3);
-    empties.forEach(empty => {
+    empties.forEach((empty) => {
       expect(empty).not.toHaveClass('invalid');
     });
   });
@@ -49,7 +53,9 @@ describe('sub-grid', () => {
       [4, 0, 1]
     ]);
     // test
-    const { getByDisplayValue, getAllByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={jest.fn()} />);
+    const { getByDisplayValue, getAllByDisplayValue } = render(
+      <SubGrid cells={grid.cells} onChange={jest.fn()} />
+    );
     // verify
     expect(getAllByDisplayValue('5')[0]).toHaveClass('invalid');
     expect(getAllByDisplayValue('5')[1]).toHaveClass('invalid');
@@ -63,7 +69,9 @@ describe('sub-grid', () => {
       [4, 0, 1]
     ]);
     const handler = jest.fn();
-    const { getByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={handler} />);
+    const { getByDisplayValue } = render(
+      <SubGrid cells={grid.cells} onChange={handler} />
+    );
     // test
     fireEvent.keyUp(getByDisplayValue('8'), {
       key: '4'
@@ -82,7 +90,9 @@ describe('sub-grid', () => {
       [4, 0, 1]
     ]);
     const handler = jest.fn();
-    const { getByDisplayValue } = render(<SubGrid cells={grid.cells} onChange={handler} />);
+    const { getByDisplayValue } = render(
+      <SubGrid cells={grid.cells} onChange={handler} />
+    );
     // test
     fireEvent.keyUp(getByDisplayValue('9'), {
       key: '5'

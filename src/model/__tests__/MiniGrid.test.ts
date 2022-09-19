@@ -19,22 +19,26 @@ describe('MiniGrid', () => {
     expect(grid.at(2, 2)).toEqual(grid.cells[8]);
   });
   it('should return numbers in the provided column', () => {
-    expect(new MiniGrid([
-      [1, 2, 3],
-      [4, 0, 6],
-      [7, 8, 9]
-    ]).column(1)).toEqual([
+    expect(
+      new MiniGrid([
+        [1, 2, 3],
+        [4, 0, 6],
+        [7, 8, 9]
+      ]).column(1)
+    ).toEqual([
       expect.objectContaining({ row: 0, col: 1, value: 2 }),
       expect.objectContaining({ row: 1, col: 1, value: 0 }),
       expect.objectContaining({ row: 2, col: 1, value: 8 })
     ]);
   });
   it('should return numbers in the provided row', () => {
-    expect(new MiniGrid([
-      [1, 2, 3],
-      [4, 0, 6],
-      [7, 8, 9]
-    ]).row(2)).toEqual([
+    expect(
+      new MiniGrid([
+        [1, 2, 3],
+        [4, 0, 6],
+        [7, 8, 9]
+      ]).row(2)
+    ).toEqual([
       expect.objectContaining({ row: 2, col: 0, value: 7 }),
       expect.objectContaining({ row: 2, col: 1, value: 8 }),
       expect.objectContaining({ row: 2, col: 2, value: 9 })
