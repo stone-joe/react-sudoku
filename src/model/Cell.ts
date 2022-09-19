@@ -2,6 +2,7 @@ import { Point } from './Point';
 
 export interface CellI extends Point {
   valid: boolean;
+  disabled: boolean;
 }
 
 export class Cell implements CellI {
@@ -12,6 +13,7 @@ export class Cell implements CellI {
   row: number = 0;
   col: number = 0;
   value: number = 0;
+  disabled: boolean = false;
   #validators: Set<Cell> = new Set();
   constructor(opts: Point & { validators?: Cell[] }) {
     this.row = opts.row;
@@ -46,7 +48,8 @@ export class Cell implements CellI {
       row: this.row,
       col: this.col,
       value: this.value,
-      valid: this.valid
+      valid: this.valid,
+      disabled: this.disabled
     };
   }
 }

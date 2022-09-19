@@ -120,7 +120,7 @@ describe('sudoku', () => {
     const { getAllByText, getAllByRole } = render(<Sudoku />);
     fireEvent.click(getAllByText('Medium')[0]);
     // verify
-    expect(getAllByRole('alert', { hidden: true })[0]).toHaveStyle('display: none');
+    expect(getAllByRole('dialog', { hidden: true })[0]).toHaveStyle('display: none');
     expect(document.querySelector('input[data-row="0"][data-col="0"]')).toHaveValue('3');
     expect(document.querySelector('input[data-row="0"][data-col="1"]')).toHaveValue('');
     expect(document.querySelector('input[data-row="0"][data-col="2"]')).toHaveValue('');
@@ -169,5 +169,9 @@ describe('sudoku', () => {
       exact: false
     })[0]).toBeVisible();
     expect(document.querySelector('.confetti-1')).toBeInTheDocument();
+    // test new game
+    fireEvent.click(getAllByText('Hard')[0]);
+    expect(document.querySelector('.confetti-1')).toBeNull();
+    expect(getAllByText('Select a level', { exact: false })[0]).not.toBeVisible();
   });
 });

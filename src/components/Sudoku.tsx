@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap-reboot.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
+import '@fortawesome/fontawesome-free/css/solid.min.css';
 import '../App.css';
 import { CellI } from '../model/Cell';
 import { Cursor } from '../model/Cursor';
@@ -9,6 +11,7 @@ import { SubGrid } from './SubGrid';
 import sudoku from '../model/sudoku';
 import { StartWindow } from './StartWindow';
 import { setValidators } from '../helpers/setValidators';
+import { Confetti } from './Confetti';
 
 export interface SudokuProps { }
 
@@ -60,8 +63,17 @@ export default function Sudoku(props: SudokuProps) {
       grids.forEach((row, rIndex) => {
         row.forEach((grid, cIndex) => {
           grid.cells.forEach(cell => {
-            const char = game[(cell.col + 3 * cIndex) + ((cell.row + 3 * rIndex) * 9)] as string;
+            const boardColumn = cell.col + 3 * cIndex;
+            const boardRow = (cell.row + 3 * rIndex);
+            const char = game[boardColumn + (boardRow * 9)] as string;
             cell.value = char === '.' ? 0 : parseInt(char);
+            cell.disabled = !!cell.value;
+            if (cell.disabled) {
+              cursor.disabled({
+                col: boardColumn,
+                row: boardRow
+              } as CellI);
+            }
           });
         });
       });
@@ -90,7 +102,10 @@ export default function Sudoku(props: SudokuProps) {
 
   return (
     <div className='board'>
-      <StartWindow complete={finished} levels={["easy", 'medium', 'hard']} onSelect={levelSelected} show={!level} />
+      <StartWindow levels={["easy", 'medium', 'hard']} onSelect={levelSelected} show={!level || finished}>
+        {finished ? (<h3>Great job! You did it!</h3>) : ''}
+      </StartWindow>
+      <Confetti show={finished} />
       {grids.map((row, rIndex) => (
         row.map((grid, cIndex) => (
           <SubGrid

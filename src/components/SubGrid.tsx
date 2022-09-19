@@ -42,6 +42,7 @@ export function SubGrid({ cells, onChange, row, col}: SubGridProps) {
           value={cell.value || ''}
           maxLength={1}
           size={3}
+          disabled={cell.disabled}
           className={cell.valid ? '' : 'invalid'}
           style={{'--row': cell.row + 1, '--col': cell.col + 1} as any}
         />

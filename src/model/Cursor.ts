@@ -1,3 +1,5 @@
+import { CellI } from './Cell.js';
+
 export class Cursor {
   #keys = {
     left: ['ArrowLeft', 'a'],
@@ -8,12 +10,13 @@ export class Cursor {
   row: number = 0;
   col: number = 0;
   size: number = 9;
-  timer: any;
+  #timer: any;
+  #disabled: Set<CellI> = new Set();
   debounce(): Promise<void> {
-    if (!this.timer) {
+    if (!this.#timer) {
       return new Promise(resolve => {
-        this.timer = setTimeout(() => {
-          this.timer = null;
+        this.#timer = setTimeout(() => {
+          this.#timer = null;
           resolve();
         }, 50);
       });
@@ -30,6 +33,9 @@ export class Cursor {
       this.up();
     } else if (this.#keys.down.includes(key)) {
       this.down();
+    }
+    if (this.#checkDisabledBox()) {
+      this.process(key);
     }
   }
   left() {
@@ -51,5 +57,21 @@ export class Cursor {
   }
   down() {
     this.row++;
+  }
+  reset() {
+    this.#disabled.clear();
+    this.col = 0;
+    this.row = 0;
+  }
+  #checkDisabledBox(): boolean {
+    for (const cell of this.#disabled) {
+      if (cell.col === this.col && cell.row === this.row) {
+        return true;
+      }
+    }
+    return false;
+  }
+  disabled(cell: CellI) {
+    this.#disabled.add(cell);
   }
 }
