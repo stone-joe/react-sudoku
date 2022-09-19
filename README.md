@@ -1,3 +1,19 @@
+# Sudoku
+
+A sudoku board and game built using React
+
+# Usage
+
+After cloning:
+1. use Docker to build an run: `docker-compose build` and `docker-compose up`; or
+2. use `npm start` to run the development server
+
+# Code
+
+The game logic is in `src/components/Sudoku.tsx` (which is also the entrypoint), game models are in `src/models`, and the rest of the components in `src/components` are view-only components (e.g. they do not affect game logic). The `Sudoku` component also handles keyboard controls, though the tracking of controller information is in `src/models/Cursor.ts`.
+
+This project uses `react-bootstrap` and `fontawesome` for styling and icons. Some scripts from the internet were used, and noted via comments, to prevent reinventing difficult logic: creating a starter sudoku board and confetti animations.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

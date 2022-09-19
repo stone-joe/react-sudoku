@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+  sudoku:
+    image: sudoku:${TAG:-devel}
+    build: .
+    ports: 
+      - ${PORT:-3000}:80
