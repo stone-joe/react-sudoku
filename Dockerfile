@@ -4,9 +4,9 @@ ARG NODE_ENV=development
 RUN apt-get update
 COPY package.json .
 RUN npm install
-COPY src .
-COPY public .
-COPY tsconfig.json .
+COPY src/ ./src/
+COPY public/ ./public/
+COPY tsconfig.json ./
 RUN npm run build
 
 FROM node:16-buster
@@ -15,6 +15,6 @@ ARG NODE_ENV=production
 RUN apt-get update
 COPY package.json .
 RUN npm install
-COPY --from=build /opt/build/dist/* /opt/sudoku/
+COPY --from=build /opt/build/build .
 
-CMD ['npm', 'run', 'production']
+CMD ["npm", "run", "production"]
